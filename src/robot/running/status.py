@@ -83,7 +83,7 @@ class _ExecutionStatus(object):
         if failure and not isinstance(failure, PassExecution):
             self.failure.teardown = unic(failure)
             self.exit.failure_occurred(failure)
-            # TODO: Handle skip in teardown!
+            self.skipped = failure.skip
 
     def failure_occurred(self):
         self.exit.failure_occurred()

@@ -143,7 +143,7 @@ class ExecutionStatus(RobotError):
     def can_continue(self, teardown=False, templated=False, dry_run=False):
         if dry_run:
             return True
-        if self.syntax or self.exit or self.test_timeout:
+        if self.syntax or self.exit or self.skip or self.test_timeout:
             return False
         if templated:
             return True

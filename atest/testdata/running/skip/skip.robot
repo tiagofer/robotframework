@@ -33,17 +33,59 @@ Skip Keyword with Custom Message
     Skip    Skipped due to reasons
     Fail    Should not be executed!
 
-Skipped in Setup 1
+Skip in Setup
     [Documentation]    SKIP Setup skip
     [Setup]    Skip    Setup skip
     Fail    Should not be executed!
 
-Skipped in Setup 2
-    [Documentation]    SKIP Setup skip
-    [Setup]    Run Keywords
-    ...    No Operation    AND
-    ...    Skip    Setup skip    AND
-    ...    Fail    Should not be executed!
+Remaining setup keywords aren't run after skip
+    [Documentation]    SKIP Skip between keywords
+    [Setup]    Skip with keywords before and after
+    Fail    Should not be executed!
+
+Skip in Teardown
+    [Documentation]    SKIP Teardown skip
+    No operation
+    [Teardown]    Skip    Teardown skip
+
+Remaining teardown keywords aren't run after skip
+    [Documentation]    SKIP Skip between keywords
+    No operation
+    [Teardown]    Skip with keywords before and after
+
+Skip in Teardown After Failure In Body
+    # FIXME: Should show failure message in the final message as well.
+    [Documentation]    SKIP Teardown skip
+    Fail    Failure in body!
+    [Teardown]    Skip    Teardown skip
+
+Teardown is executed after skip
+    [Documentation]    SKIP Skip in body
+    Skip    Skip in body
+    [Teardown]    Log    Teardown is executed!
+
+Fail in Teardown After Skip In Body
+    # FIXME: This test doesn't pass at the moment. Status should be SKIP
+    # but the final error message should also contain the teardown failure.
+    [Documentation]    SKIP FIXME
+    Skip    Skip in body
+    [Teardown]    Fail    Teardown failed!
+
+Skip in Teardown After Skip In Body
+    # FIXME: Should probably show both skip messages in the final message.
+    [Documentation]    SKIP Teardown skip
+    Skip    Skip in body
+    [Teardown]    Skip    Teardown skip
+
+Skip with Continuable Failures
+    # FIXME: This test doesn't pass at the moment. Status should be SKIP
+    # but the final error message should also contain earlier failures.
+    [Documentation]    SKIP FIXME
+    Run Keyword And Continue On Failure
+    ...    Fail    We can continue!
+    Run Keyword And Continue On Failure
+    ...    Fail    We can continue again!
+    Skip    Skipping should stop execution but test should still fail
     Fail    Should not be executed!
 
 Skipped with --skip
@@ -72,3 +114,9 @@ Failing Test
 
 Passing Test
     No Operation
+
+*** Keywords ***
+Skip with keywords before and after
+    No Operation
+    Skip    Skip between keywords
+    Fail    Should not be executed!
