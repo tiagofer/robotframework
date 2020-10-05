@@ -148,6 +148,7 @@ class BooleanConverter(TypeConverter):
 class StringConverter(TypeConverter):
     type = str
     type_name = 'str'
+    convert_none = False
 
     def _convert(self, value, explicit_type=True):
         return str(value)
