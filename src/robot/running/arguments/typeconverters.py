@@ -19,6 +19,11 @@ try:
     from collections import abc
 except ImportError:    # Python 2
     import collections as abc
+try:
+    from typing import Union
+except ImportError:
+    class Union(object):
+        pass
 from datetime import datetime, date, timedelta
 from decimal import InvalidOperation, Decimal
 try:
@@ -58,6 +63,8 @@ class TypeConverter(object):
     def converter_for(cls, type_):
         # Types defined in the typing module in Python 3.7+. For details see
         # https://bugs.python.org/issue34568
+        if hasattr(type_, '__origin__') and type_.__origin__ == Union:
+            return CombinedConverter([TypeConverter.converter_for(t) for t in  type_.__args__], type_)
         if PY_VERSION >= (3, 7) and hasattr(type_, '__origin__'):
             type_ = type_.__origin__
         if isinstance(type_, (str, unicode)):
@@ -65,7 +72,7 @@ class TypeConverter(object):
                 type_ = cls._type_aliases[type_.lower()]
             except KeyError:
                 return None
-        if not isinstance(type_, type) or issubclass(type_, unicode):
+        if not isinstance(type_, type):
             return None
         if type_ in cls._converters:
             return cls._converters[type_]
@@ -135,6 +142,15 @@ class BooleanConverter(TypeConverter):
         if upper in FALSE_STRINGS:
             return False
         return value
+
+
+@TypeConverter.register
+class StringConverter(TypeConverter):
+    type = str
+    type_name = 'str'
+
+    def _convert(self, value, explicit_type=True):
+        return str(value)
 
 
 @TypeConverter.register
@@ -334,3 +350,24 @@ class FrozenSetConverter(TypeConverter):
         if value == 'frozenset()' and not PY2:
             return frozenset()
         return frozenset(self._literal_eval(value, set))
+
+
+class CombinedConverter(TypeConverter):
+
+    def __init__(self, converters, type_):
+        self._combination = converters
+        self._type = type_
+
+    @property
+    def type_name(self):
+        return str(self._type)
+
+    def _convert(self, value, explicit_type=True):
+        for converter in self._combination:
+            if converter is None:
+                continue
+            try:
+                return converter._convert(value, explicit_type)
+            except ValueError:
+                pass
+        raise ValueError("Could not convert value '%s'" % value)
