@@ -79,7 +79,7 @@ class TypeConverter(object):
         for converter in cls._converters.values():
             if converter.handles(type_):
                 return converter.get_converter(type_)
-        return None
+        return GenericTypeConverter(type_)
 
     def handles(self, type_):
         return (issubclass(type_, self.type) or
@@ -372,3 +372,14 @@ class CombinedConverter(TypeConverter):
             except ValueError:
                 pass
         raise ValueError("Could not convert value '%s'" % value)
+
+
+class GenericTypeConverter(TypeConverter):
+
+    def __init__(self, type_):
+        self.type = type_
+
+    def _convert(self, value, explicit_type=True):
+        if isinstance(value, self.type):
+            return value
+        raise ValueError("Given value '%s' is not expected type '%s'" % (value, self.type))
