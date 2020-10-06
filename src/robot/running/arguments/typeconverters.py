@@ -64,7 +64,7 @@ class TypeConverter(object):
         # Types defined in the typing module in Python 3.7+. For details see
         # https://bugs.python.org/issue34568
         if hasattr(type_, '__origin__') and type_.__origin__ == Union:
-            return CombinedConverter([TypeConverter.converter_for(t) for t in  type_.__args__], type_)
+            return CombinedConverter(type_)
         if PY_VERSION >= (3, 7) and hasattr(type_, '__origin__'):
             type_ = type_.__origin__
         if isinstance(type_, (str, unicode)):
@@ -72,14 +72,14 @@ class TypeConverter(object):
                 type_ = cls._type_aliases[type_.lower()]
             except KeyError:
                 return None
-        if not isinstance(type_, type):
+        if not isinstance(type_, type) or issubclass(type_, unicode):
             return None
         if type_ in cls._converters:
             return cls._converters[type_]
         for converter in cls._converters.values():
             if converter.handles(type_):
                 return converter.get_converter(type_)
-        return GenericTypeConverter(type_)
+        return None
 
     def handles(self, type_):
         return (issubclass(type_, self.type) or
@@ -145,21 +145,12 @@ class BooleanConverter(TypeConverter):
 
 
 @TypeConverter.register
-class StringConverter(TypeConverter):
-    type = str
-    type_name = 'str'
-    convert_none = False
-
-    def _convert(self, value, explicit_type=True):
-        return str(value)
-
-
-@TypeConverter.register
 class IntegerConverter(TypeConverter):
     type = int
     abc = Integral
     type_name = 'integer'
     aliases = ('int', 'long')
+    convert_none = False
 
     def _convert(self, value, explicit_type=True):
         try:
@@ -354,27 +345,28 @@ class FrozenSetConverter(TypeConverter):
 
 
 class CombinedConverter(TypeConverter):
+    convert_none = False
 
-    def __init__(self, converters, type_):
-        self._combination = converters
-        self._type = type_
-
-    @property
-    def type_name(self):
-        return str(self._type)
+    def __init__(self, type_):
+        def converter_for(t):
+            c = TypeConverter.converter_for(t)
+            if c is None:
+                return GenericTypeConverter(t)
+            return c
+        self._combination = [converter_for(t) for t in type_.__args__]
+        self.type = type_
 
     def _convert(self, value, explicit_type=True):
         for converter in self._combination:
-            if converter is None:
-                continue
             try:
-                return converter._convert(value, explicit_type)
+                return converter.convert('', value, explicit_type)
             except ValueError:
                 pass
         raise ValueError("Could not convert value '%s'" % value)
 
 
 class GenericTypeConverter(TypeConverter):
+    convert_none = False
 
     def __init__(self, type_):
         self.type = type_
