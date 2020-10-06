@@ -42,7 +42,7 @@ class TypeConverter(object):
     type = None
     abc = None
     aliases = ()
-    convert_none = True
+    convert_none = False
     _converters = OrderedDict()
     _type_aliases = {}
 
@@ -150,7 +150,6 @@ class IntegerConverter(TypeConverter):
     abc = Integral
     type_name = 'integer'
     aliases = ('int', 'long')
-    convert_none = False
 
     def _convert(self, value, explicit_type=True):
         try:
@@ -196,7 +195,6 @@ class BytesConverter(TypeConverter):
     type = bytes
     abc = getattr(abc, 'ByteString', None)    # ByteString is new in Python 3
     type_name = 'bytes'                       # Needed on Python 2
-    convert_none = False
 
     def _convert(self, value, explicit_type=True):
         if PY2 and not explicit_type:
@@ -212,7 +210,6 @@ class BytesConverter(TypeConverter):
 @TypeConverter.register
 class ByteArrayConverter(TypeConverter):
     type = bytearray
-    convert_none = False
 
     def _convert(self, value, explicit_type=True):
         try:
@@ -291,6 +288,7 @@ class EnumConverter(TypeConverter):
 @TypeConverter.register
 class NoneConverter(TypeConverter):
     type = type(None)
+    convert_none = True
 
     def _convert(self, value, explicit_type=True):
         return value
@@ -345,7 +343,6 @@ class FrozenSetConverter(TypeConverter):
 
 
 class CombinedConverter(TypeConverter):
-    convert_none = False
 
     def __init__(self, type_):
         def converter_for(t):
@@ -366,7 +363,6 @@ class CombinedConverter(TypeConverter):
 
 
 class GenericTypeConverter(TypeConverter):
-    convert_none = False
 
     def __init__(self, type_):
         self.type = type_

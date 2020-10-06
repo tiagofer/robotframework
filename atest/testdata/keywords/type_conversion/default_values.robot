@@ -49,7 +49,7 @@ Boolean
     Boolean              oFF                       ${False}
     Boolean              0                         ${False}
     Boolean              ${EMPTY}                  ${False}
-    Boolean              none                      ${None}
+    Boolean              none                      ${False}
 
 Invalid boolean
     [Template]           Invalid value is passed as-is
