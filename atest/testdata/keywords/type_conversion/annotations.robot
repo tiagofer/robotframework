@@ -13,6 +13,8 @@ Integer
     Integer              42                        ${42}
     Integer              -1                        ${-1}
     Integer              9999999999999999999999    ${9999999999999999999999}
+    Integer              ${41}                     ${41}
+    Integer              ${-4.0}                     ${-4}
 
 Invalid integer
     [Template]           Conversion Should Fail
@@ -34,6 +36,8 @@ Float
     Float                -1                        ${-1.0}
     Float                1e6                       ${1000000.0}
     Float                -1.2e-3                   ${-0.0012}
+    Float                ${4}                      ${4.0}
+    Float                ${-4.1}                   ${-4.1}
 
 Invalid float
     [Template]           Conversion Should Fail
