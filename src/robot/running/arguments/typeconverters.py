@@ -152,6 +152,8 @@ class IntegerConverter(TypeConverter):
     aliases = ('int', 'long')
 
     def _convert(self, value, explicit_type=True):
+        if explicit_type and isinstance(value, float) and not value.is_integer():
+            raise ValueError
         try:
             return int(value)
         except ValueError:
