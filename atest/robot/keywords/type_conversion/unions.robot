@@ -13,3 +13,9 @@ Optional is removed when None is default
 Multitype union works in order
      Check Test Case    ${TESTNAME}
 
+Custom type inside of union
+     Check Test Case    ${TESTNAME}
+
+Unexpected object is just passed when in union
+     Check Test Case    ${TESTNAME}
+

@@ -19,4 +19,13 @@ Multitype union works in order
     Union of int float and string   2hello  2hello
     Union of int float and string   ${-110}  ${-110}
 
+Custom type inside of union
+    ${myobject}=  Create my object
+    Custom type in union  myobject     <class 'str'>
+    Custom type in union  ${myobject}  <class 'unions.MyObject'>
+
+Unexpected object is just passed when in union
+    ${object}=  Create unexpected object
+    Custom type in union  ${object}     <class 'unions.UnexpectedObject'>
+
 
