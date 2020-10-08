@@ -35,7 +35,7 @@ from numbers import Integral, Real
 
 from robot.libraries.DateTime import convert_date, convert_time
 from robot.utils import (FALSE_STRINGS, IRONPYTHON, TRUE_STRINGS, PY_VERSION,
-                         PY2, eq, seq2str, type_name, unicode)
+                         PY2, eq, seq2str, type_name, unicode, is_unicode)
 
 
 class TypeConverter(object):
@@ -89,7 +89,7 @@ class TypeConverter(object):
         return self
 
     def convert(self, name, value, explicit_type=True):
-        if self.convert_none and value.upper() == 'NONE':
+        if self.convert_none and is_unicode(value) and value.upper() == 'NONE':
             return None
         try:
             return self._convert(value, explicit_type)

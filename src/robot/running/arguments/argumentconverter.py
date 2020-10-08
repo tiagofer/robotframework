@@ -55,10 +55,13 @@ class ArgumentConverter(object):
         return converter.convert(name, value, explicit_type)
 
     def _get_type(self, name, value):
-        if self._argspec.types is None:
+        if self._argspec.types is None or not self._is_handled_type(value):
             return None, None
         if name in self._argspec.types:
             return self._argspec.types[name], True
         if name in self._argspec.defaults:
             return type(self._argspec.defaults[name]), False
         return None, None
+
+    def _is_handled_type(self, value):
+        return is_unicode(value) or (not isinstance(value, bool) and isinstance(value, (int, float)))

@@ -172,7 +172,7 @@ Kwonly
 Invalid kwonly
     Check Test Case    ${TESTNAME}
 
-Non-strings are not converted
+Boolean, None, List and Dict are not converted
     Check Test Case    ${TESTNAME}
 
 Return value annotation causes no error
