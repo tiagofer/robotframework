@@ -101,7 +101,7 @@ class TestVariables(unittest.TestCase):
         assert_equal(self.varz.replace_list(['${L2}[1]']), [['v11', 'v12']])
         assert_equal(self.varz.replace_scalar('${L2}[0]'), 'v0')
         assert_equal(self.varz.replace_scalar('${L2}[1]'), ['v11', 'v12'])
-        assert_equal(self.varz.replace_list(['${L}[0]', '@{L2}[1]']), ['v0', 'v11', 'v12'])
+        assert_equal(self.varz.replace_list(['${L}[0]', '@{L2}[1]']), ['v0', ['v11', 'v12']])
 
     def test_replace_dict_item(self):
         self.varz['&{D}'] = {'a': 1, 2: 'b', 'nested': {'a': 1}}
