@@ -383,21 +383,6 @@ Non-strings are not converted
     Timedelta
     NoneType
 
-String None is converted to None object
-    [Template]           String None is converted to None object
-    Integer
-    Float
-    Boolean
-    Decimal
-    List
-    Tuple
-    Dictionary
-    Set
-    Frozenset
-    DateTime
-    Date
-    Timedelta
-
 Return value annotation causes no error
     Return value annotation                    42    42
 

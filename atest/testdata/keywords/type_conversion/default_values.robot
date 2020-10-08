@@ -232,22 +232,6 @@ Unknown types are not converted
     Unknown              none                      u'none'
     Unknown              []                        u'[]'
 
-String None is converted to None object
-    [Template]           String None is converted to None object
-    Integer
-    Float
-    Decimal
-    Boolean
-    Datetime
-    Date
-    Timedelta
-    Enum
-    List
-    Tuple
-    Dictionary
-    Set
-    Frozenset
-
 Positional as named
     Integer              argument=-1               expected=-1
     Float                argument=1e2              expected=100.0

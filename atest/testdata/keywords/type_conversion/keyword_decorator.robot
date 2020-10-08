@@ -397,21 +397,6 @@ Non-strings are not converted
     Timedelta
     NoneType
 
-String None is converted to None object
-    [Template]           String None is converted to None object
-    Integer
-    Float
-    Boolean
-    Decimal
-    List
-    Tuple
-    Dictionary
-    Set
-    Frozenset
-    DateTime
-    Date
-    Timedelta
-
 Invalid type spec causes error
     [Documentation]    FAIL No keyword with name 'Invalid type spec' found.
     [Tags]    negative
