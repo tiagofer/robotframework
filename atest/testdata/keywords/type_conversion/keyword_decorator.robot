@@ -378,8 +378,8 @@ Invalid kwonly
     [Template]           Conversion Should Fail
     Kwonly               argument=foobar           type=float
 
-Non-strings are not converted
-    [Template]           Non-string is not converted
+Boolean, None, List and Dict are not converted
+    [Template]           Boolean, None, List and Dict are not converted
     Integer
     Float
     Boolean
